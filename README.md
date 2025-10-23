@@ -1,76 +1,66 @@
-🎁 Referral Reward Smart Contract
-📌 Overview
+# 🎁 Refer-Win: Referral Reward Smart Contract
 
-The Referral Reward Smart Contract is a simple on-chain incentive mechanism that allows users to refer others and earn rewards. It ensures transparency in referral tracking and automated reward distribution without any centralized intermediary.
+## 📘 Overview
+**Refer-Win** is a blockchain-based referral reward system that allows users to refer others and earn rewards directly on-chain. The contract ensures transparency, fairness, and automation in reward distribution — without the need for a centralized intermediary.
 
-⚙️ Features
+---
 
-User Registration: Users can register themselves and optionally provide a referrer.
+## 🎯 Vision
+To build a **trustless and automated reward ecosystem** that incentivizes user growth while maintaining transparency and security on the blockchain.
 
-Automatic Rewarding: Referrers receive a predefined token or ETH reward for every valid referral.
+---
 
-Unique Referral Tracking: Prevents duplicate or circular referrals.
+## ⚙️ Features
+- **User Registration:** New users can register with an existing referrer.
+- **Reward Distribution:** Referrers earn automatic rewards for valid referrals.
+- **Duplicate Prevention:** Prevents multiple or self-referrals.
+- **Configurable Rewards:** Admin can update the reward amount.
+- **Fully On-Chain Tracking:** Immutable and verifiable record of all referrals.
 
-Transparency: All referral data and rewards are stored immutably on the blockchain.
+---
 
-Configurable Reward Amount: Contract owner can set or update the reward per referral.
+## 🧩 Smart Contract Details
+| Element | Description |
+|----------|-------------|
+| **Contract Name** | `ReferralReward` |
+| **Compiler Version** | `^0.8.20` |
+| **Core Functions** | `registerReferral()`, `claimReward()`, `setRewardAmount()` |
 
-🧩 Smart Contract Structure
-Component	Description
-mapping(address => address)	Tracks each user’s referrer.
-mapping(address => uint)	Stores total rewards earned by each referrer.
-registerReferral(address referrer)	Registers a new user and assigns a referrer.
-claimReward()	Allows referrers to withdraw accumulated rewards.
-setRewardAmount(uint _amount)	(Owner-only) Updates the reward value.
+---
+
+## 💻 Example Solidity Base Code
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract ReferralReward {
+    // Contract will handle user referrals and reward distribution
+}
 🧠 Tech Stack
-
 Language: Solidity
 
-Tools: Hardhat / Remix / Foundry
+Tools: Remix IDE, MetaMask
 
-Blockchain: Ethereum / Core / Polygon (testnet recommended)
+Network: Core Testnet
 
-License: MIT
+Version Control: GitHub
 
-🚀 Getting Started
-1. Clone the Repository
-git clone https://github.com/ashwanipathak22634/Refer-Win.git
-cd referral-reward-contract
+🌐 Deployment Details
+Network: Core Testnet
 
-2. Compile the Contract
-npx hardhat compile
+Deployed Contract Address: <YOUR_DEPLOYED_CONTRACT_ADDRESS>
 
-3. Deploy the Contract
-npx hardhat run scripts/deploy.js --network <network-name>
+Transaction Hash: <YOUR_TRANSACTION_HASH>
 
-4. Interact
+🖼️ Deployment Verification
+Include your deployment verification screenshot here:
 
-You can interact with the deployed contract via:
+🚀 Future Scope
+Integrate ERC-20 token reward payouts.
 
-Remix IDE
+Add leaderboard and tiered reward logic.
 
-Hardhat console
+Implement referral expiration and analytics dashboard.
 
-Ethers.js / Web3.js scripts
+Build frontend interface for live tracking.
 
-🧪 Example Usage
-// User registers with a referrer
-registerReferral(0x123...abc);  
-
-// Referrer checks total rewards
-getRewardBalance(0x123...abc);  
-
-// Referrer claims rewards
-claimReward();
-
-🔒 Security Notes
-
-Ensure that only the contract owner can modify reward amounts.
-
-Prevent self-referrals and multiple registrations per address.
-
-Consider using SafeMath or Solidity ^0.8.x for overflow safety.
-
-📄 License
-
-This project is licensed under the MIT License — you may freely use and adapt it for learning or production purposes.
