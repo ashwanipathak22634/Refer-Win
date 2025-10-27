@@ -9,6 +9,9 @@ contract ReferralReward {
 
     uint256 public rewardAmount = 0.01 ether;
 
+    event ReferralRegistered(address indexed referrer, address indexed referee, uint256 reward);
+    event RewardClaimed(address indexed user, uint256 amount);
+
     constructor() {
         owner = msg.sender;
     }
@@ -23,6 +26,7 @@ contract ReferralReward {
         require(referrerOf[msg.sender] == address(0), "Already referred");
         referrerOf[msg.sender] = _referrer;
         rewards[_referrer] += rewardAmount;
+        emit ReferralRegistered(_referrer, msg.sender, rewardAmount);
     }
 
     function claimReward() public {
@@ -30,8 +34,9 @@ contract ReferralReward {
         require(amount > 0, "No rewards to claim");
         rewards[msg.sender] = 0;
         payable(msg.sender).transfer(amount);
+        emit RewardClaimed(msg.sender, amount);
     }
 
-    // Owner can fund contract
+    // Allow owner to fund the contract
     receive() external payable {}
 }
