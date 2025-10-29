@@ -1,44 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-/// @title Refer-Win: Referral Reward Smart Contract
-/// @notice Allows users to refer others and earn on-chain rewards in ETH.
-
 contract ReferralReward {
     address public owner;
-    uint256 public rewardAmount = 0.01 ether;
 
     mapping(address => address) public referrerOf;
     mapping(address => uint256) public rewards;
 
+    uint256 public rewardAmount = 0.01 ether;
+
     event ReferralRegistered(address indexed referrer, address indexed referee, uint256 reward);
     event RewardClaimed(address indexed user, uint256 amount);
-    event RewardAmountUpdated(uint256 newAmount);
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event RewardAmountUpdated(uint256 oldAmount, uint256 newAmount);
+    event FundsWithdrawn(address indexed owner, uint256 amount);
 
     constructor() {
         owner = msg.sender;
     }
 
-    // -----------------------------
-    // 🔒 Modifiers
-    // -----------------------------
     modifier onlyOwner() {
         require(msg.sender == owner, "Not authorized");
         _;
     }
 
-    // -----------------------------
-    // 🧩 Core Functions
-    // -----------------------------
-
-    /// @notice Register a referral between referrer and referee.
-    /// @param _referrer The address of the referring user.
-    function registerReferral(address _referrer) external {
+    // Register a new referral
+    function registerReferral(address _referrer) public {
         require(_referrer != msg.sender, "Cannot refer yourself");
         require(referrerOf[msg.sender] == address(0), "Already referred");
-        require(_referrer != address(0), "Invalid referrer address");
-        require(address(this).balance >= rewardAmount, "Insufficient contract balance");
 
         referrerOf[msg.sender] = _referrer;
         rewards[_referrer] += rewardAmount;
@@ -46,46 +34,29 @@ contract ReferralReward {
         emit ReferralRegistered(_referrer, msg.sender, rewardAmount);
     }
 
-    /// @notice Allows referrers to claim their accumulated rewards.
-    function claimReward() external {
+    // Claim accumulated rewards
+    function claimReward() public {
         uint256 amount = rewards[msg.sender];
         require(amount > 0, "No rewards to claim");
-
         rewards[msg.sender] = 0;
         payable(msg.sender).transfer(amount);
-
         emit RewardClaimed(msg.sender, amount);
     }
 
-    // -----------------------------
-    // ⚙️  Admin Controls
-    // -----------------------------
-
-    /// @notice Update the default reward amount (only owner).
-    /// @param _newAmount The new reward amount (in wei).
-    function updateRewardAmount(uint256 _newAmount) external onlyOwner {
-        require(_newAmount > 0, "Invalid reward amount");
+    // Allow owner to update reward amount
+    function updateRewardAmount(uint256 _newAmount) public onlyOwner {
+        uint256 oldAmount = rewardAmount;
         rewardAmount = _newAmount;
-
-        emit RewardAmountUpdated(_newAmount);
+        emit RewardAmountUpdated(oldAmount, _newAmount);
     }
 
-    /// @notice Transfer ownership of the contract to another address.
-    function transferOwnership(address _newOwner) external onlyOwner {
-        require(_newOwner != address(0), "Invalid new owner");
-        emit OwnershipTransferred(owner, _newOwner);
-        owner = _newOwner;
+    // Allow owner to withdraw remaining funds from the contract
+    function withdrawFunds(uint256 _amount) public onlyOwner {
+        require(address(this).balance >= _amount, "Insufficient balance");
+        payable(owner).transfer(_amount);
+        emit FundsWithdrawn(owner, _amount);
     }
 
-    // -----------------------------
-    // 💰 Funding & Utility
-    // -----------------------------
-
-    /// @notice Fund the contract (allows it to pay rewards).
+    // Receive ether to fund the contract
     receive() external payable {}
-
-    /// @notice View current balance of the contract.
-    function getContractBalance() external view returns (uint256) {
-        return address(this).balance;
-    }
 }
