@@ -13,6 +13,7 @@ contract ReferralReward {
     event RewardClaimed(address indexed user, uint256 amount);
     event RewardAmountUpdated(uint256 oldAmount, uint256 newAmount);
     event FundsWithdrawn(address indexed owner, uint256 amount);
+    event ContractFunded(address indexed sender, uint256 amount);
 
     constructor() {
         owner = msg.sender;
@@ -27,6 +28,7 @@ contract ReferralReward {
     function registerReferral(address _referrer) public {
         require(_referrer != msg.sender, "Cannot refer yourself");
         require(referrerOf[msg.sender] == address(0), "Already referred");
+        require(_referrer != address(0), "Invalid referrer");
 
         referrerOf[msg.sender] = _referrer;
         rewards[_referrer] += rewardAmount;
@@ -38,25 +40,30 @@ contract ReferralReward {
     function claimReward() public {
         uint256 amount = rewards[msg.sender];
         require(amount > 0, "No rewards to claim");
+        require(address(this).balance >= amount, "Insufficient contract balance");
+
         rewards[msg.sender] = 0;
         payable(msg.sender).transfer(amount);
+
         emit RewardClaimed(msg.sender, amount);
     }
 
-    // Allow owner to update reward amount
+    // Update reward amount (owner only)
     function updateRewardAmount(uint256 _newAmount) public onlyOwner {
         uint256 oldAmount = rewardAmount;
         rewardAmount = _newAmount;
         emit RewardAmountUpdated(oldAmount, _newAmount);
     }
 
-    // Allow owner to withdraw remaining funds from the contract
+    // Owner withdraws contract funds
     function withdrawFunds(uint256 _amount) public onlyOwner {
         require(address(this).balance >= _amount, "Insufficient balance");
         payable(owner).transfer(_amount);
         emit FundsWithdrawn(owner, _amount);
     }
 
-    // Receive ether to fund the contract
-    receive() external payable {}
+    // Deposit ETH into contract
+    receive() external payable {
+        emit ContractFunded(msg.sender, msg.value);
+    }
 }
