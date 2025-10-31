@@ -27,16 +27,7 @@ To build a **trustless and automated reward ecosystem** that incentivizes user g
 | **Core Functions** | `registerReferral()`, `claimReward()`, `setRewardAmount()` |
 
 ---
-
-## 💻 Example Solidity Base Code
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
-
-contract ReferralReward {
-    // Contract will handle user referrals and reward distribution
-}
-🧠 Tech Stack
+##🧠 Tech Stack
 Language: Solidity
 
 Tools: Remix IDE, Metamask wallet
@@ -45,17 +36,14 @@ Network: Core Testnet
 
 Version Control: GitHub
 
-🌐 Deployment Details
+##🌐 Deployment Details
+<img width="1883" height="917" alt="image" src="https://github.com/user-attachments/assets/5b5bd36d-100c-4a47-8bca-87cab86cccf0" />
+
 Network: Core Testnet
 
-Deployed Contract Address: <YOUR_DEPLOYED_CONTRACT_ADDRESS>
+Deployed Contract Address: 0x078860187B211CD48D4F1e957DbDf65BD61eAc16
 
-Transaction Hash: <YOUR_TRANSACTION_HASH>
-
-🖼️ Deployment Verification
-Include your deployment verification screenshot here:
-
-🚀 Future Scope
+##🚀 Future Scope
 Integrate ERC-20 token reward payouts.
 
 Add leaderboard and tiered reward logic.
@@ -63,4 +51,5 @@ Add leaderboard and tiered reward logic.
 Implement referral expiration and analytics dashboard.
 
 Build frontend interface for live tracking.
+
 
